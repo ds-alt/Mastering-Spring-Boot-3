@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f9fc;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #1e3a8a;
+      }
+
+      .status-box {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+        background-color: white;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .up {
+        background-color: #22c55e;
+      }
+
+      .down {
+        background-color: #ef4444;
+      }
+
+      pre {
+        background-color: #f1f5f9;
+        padding: 10px;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Admin Dashboard</h1>
+
+    <div class="status-box">
+      <h2>Health Status:</h2>
+      <p>
+        <span id="healthIndicator" class="status-indicator"></span>
+        <span id="healthStatusText">Loading...</span>
+      </p>
+    </div>
+
+    <div class="status-box">
+      <h2>Application Info:</h2>
+      <pre id="appInfo">Loading...</pre>
+    </div>
+
+    <div class="status-box">
+      <h2>System Metrics:</h2>
+      <pre id="metrics">Loading...</pre>
+    </div>
+
+    <script>
+      // Health
+      fetch("/manage/health")
+        .then((res) => res.json())
+        .then((data) => {
+          const indicator = document.getElementById("healthIndicator");
+          const statusText = document.getElementById("healthStatusText");
+          const status = data.status;
+
+          indicator.classList.add(status === "UP" ? "up" : "down");
+          statusText.innerText = status;
+        });
+
+      // Info
+      fetch("/manage/info")
+        .then((res) => res.json())
+        .then((data) => {
+          document.getElementById("appInfo").innerText = JSON.stringify(
+            data,
+            null,
+            2
+          );
+        });
+
+      // Metrics
+      fetch("/manage/metrics")
+        .then((res) => res.json())
+        .then((data) => {
+          const filtered = {
+            "jvm.memory.used": data["names"].includes("jvm.memory.used")
+              ? "Memory used: included"
+              : "not available",
+            "process.uptime": data["names"].includes("process.uptime")
+              ? "Uptime: included"
+              : "not available",
+          };
+          document.getElementById("metrics").innerText = JSON.stringify(
+            filtered,
+            null,
+            2
+          );
+        });
+    </script>
+  </body>
+</html>

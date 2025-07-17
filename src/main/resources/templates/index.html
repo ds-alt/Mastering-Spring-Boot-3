@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Books Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body>
+    <h1>Book List</h1>
+
+    <!-- LOGIN/LOGOUT STATUS -->
+    <div class="auth-box">
+      <div sec:authorize="isAuthenticated()">
+        Logged in as <b th:text="${#authentication.name}">user</b>
+        <a th:href="@{/logout}">Logout</a>
+      </div>
+      <div sec:authorize="isAnonymous()">
+        <a th:href="@{/login}">Login</a>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="container">
+      <form id="book-form">
+        <input type="hidden" id="book-id" />
+        <input type="text" id="title" placeholder="Title" required />
+        <input type="text" id="author" placeholder="Author" required />
+        <input type="number" id="price" placeholder="Price" required />
+        <button type="submit">Save Book</button>
+      </form>
+
+      <!-- TABLE -->
+      <h2>Books:</h2>
+      <table id="book-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script>
+      const form = document.getElementById("book-form");
+      const idField = document.getElementById("book-id");
+      const titleField = document.getElementById("title");
+      const authorField = document.getElementById("author");
+      const priceField = document.getElementById("price");
+      const tableBody = document.querySelector("#book-table tbody");
+
+      async function fetchBooks() {
+        const response = await fetch("/books");
+        const books = await response.json();
+        tableBody.innerHTML = "";
+        books.forEach((book) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+          <td>${book.id}</td>
+          <td>${book.title}</td>
+          <td>${book.author}</td>
+          <td>${book.price}</td>
+          <td>
+            <button onclick="editBook(${book.id}, '${book.title}', '${book.author}', ${book.price})">Edit</button>
+            <button onclick="deleteBook(${book.id})">Delete</button>
+          </td>
+        `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const book = {
+          title: titleField.value,
+          author: authorField.value,
+          price: parseFloat(priceField.value),
+        };
+
+        const id = idField.value;
+
+        if (id) {
+          await fetch(`/books/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(book),
+          });
+        } else {
+          await fetch("/books", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(book),
+          });
+        }
+
+        form.reset();
+        idField.value = "";
+        fetchBooks();
+      });
+
+      async function deleteBook(id) {
+        await fetch(`/books/${id}`, { method: "DELETE" });
+        fetchBooks();
+      }
+
+      function editBook(id, title, author, price) {
+        idField.value = id;
+        titleField.value = title;
+        authorField.value = author;
+        priceField.value = price;
+      }
+
+      fetchBooks();
+    </script>
+  </body>
+</html>

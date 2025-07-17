@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Books Paged</title>
+    <link rel="stylesheet" href="/css/paged.css" />
+  </head>
+  <body>
+    <h1>Books List (Paged)</h1>
+    <table id="bookTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Price (€)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="pagination">
+      <button onclick="prevPage()">Prev</button>
+      <span id="pageInfo"></span>
+      <button onclick="nextPage()">Next</button>
+    </div>
+
+    <script>
+      let currentPage = 0;
+      const pageSize = 5;
+
+      async function loadBooks(page) {
+        const response = await fetch(
+          `/books/paged?page=${page}&size=${pageSize}`
+        );
+        const data = await response.json();
+
+        const tbody = document.querySelector("#bookTable tbody");
+        tbody.innerHTML = "";
+
+        data.content.forEach((book) => {
+          const row = `<tr>
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${book.price}</td>
+                </tr>`;
+          tbody.innerHTML += row;
+        });
+
+        document.getElementById("pageInfo").textContent = `Page ${
+          data.number + 1
+        } of ${data.totalPages}`;
+        currentPage = data.number;
+      }
+
+      function nextPage() {
+        loadBooks(currentPage + 1);
+      }
+
+      function prevPage() {
+        if (currentPage > 0) loadBooks(currentPage - 1);
+      }
+
+      // Initial load
+      loadBooks(currentPage);
+    </script>
+  </body>
+</html>

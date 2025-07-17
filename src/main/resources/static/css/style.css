@@ -1,0 +1,172 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f4f8;
+  margin: 60px auto;
+  max-width: 900px;
+  padding: 20px;
+  color: #1f2937;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #1e3a8a;
+}
+.container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+form#book-form {
+  display: flex;
+  flex-direction: row; /* horizontal layout */
+  gap: 10px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+form#book-form input[type="text"],
+form#book-form input[type="number"] {
+  flex: 1; /* распределува простор рамномерно */
+  padding: 10px 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1.5px solid #cbd5e1;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+form#book-form input:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+form#book-form button {
+  padding: 10px 16px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+form#book-form button:hover {
+  background-color: #1d4ed8;
+}
+
+input,
+button {
+  padding: 10px 12px;
+  margin-left: 5px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1.5px solid #cbd5e1;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+}
+
+table {
+  margin-top: 28px;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+th {
+  background-color: #e0e7ff;
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.actions button {
+  margin-right: 6px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.actions button.update {
+  background-color: #0ea5e9;
+  color: white;
+}
+
+.actions button.update:hover {
+  background-color: #0284c7;
+}
+
+.actions button.delete {
+  background-color: #ef4444;
+  color: white;
+}
+
+.actions button.delete:hover {
+  background-color: #b91c1c;
+}
+
+.auth-box {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background-color: #f2f2f2;
+  padding: 8px 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.auth-box b {
+  color: #333;
+}
+
+.auth-box a {
+  margin-left: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.auth-box a:hover {
+  text-decoration: underline;
+}
