@@ -1,50 +1,55 @@
 package com.book.mastering_spring_boot_3.controller;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.book.mastering_spring_boot_3.model.User;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api") // Општа префиксна патека
 public class HelloController {
 
-    @GetMapping("/hello")
-    public String sayHello() {
-        return "Hello from Mastering Spring Boot 3!";
-    }
-
-    // If you want it not to break when there is no value, set the default:
     @Value("${app.message:Default message}")
     private String message;
 
+    // Basic hello endpoint
+    @GetMapping("/hello")
+    public ResponseEntity<String> sayHello() {
+        return ResponseEntity.ok("Hello from Mastering Spring Boot 3!");
+    }
+
+    // Config value from application.properties
     @GetMapping("/config")
-    public String getMessage() {
-        return message;
+    public ResponseEntity<String> getMessage() {
+        return ResponseEntity.ok(message);
     }
 
+    // Query param example
     @GetMapping("/greet")
-    public String greetUser(@RequestParam String name) {
-        return "Hello, " + name + "!";
+    public ResponseEntity<String> greetUser(@RequestParam String name) {
+        return ResponseEntity.ok("Hello, " + name + "!");
     }
 
+    // Path variable example
     @GetMapping("/greet/{name}")
-    public String greetUserPath(@PathVariable String name) {
-        return "Hi there, " + name + "!";
+    public ResponseEntity<String> greetUserPath(@PathVariable String name) {
+        return ResponseEntity.ok("Hi there, " + name + "!");
     }
 
+    // Path + query param combined
     @GetMapping("/info/{id}")
-    public String showInfo(@PathVariable int id, @RequestParam String details) {
-        return "ID: " + id + ", Details: " + details;
+    public ResponseEntity<String> showInfo(
+            @PathVariable int id,
+            @RequestParam String details) {
+        return ResponseEntity.ok("ID: " + id + ", Details: " + details);
     }
 
+    // JSON POST request with request body
     @PostMapping("/user")
-    public String createUser(@RequestBody User user) {
-        return "User created: " + user.getName() + ", age: " + user.getAge();
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        if (user.getName() == null || user.getAge() == 0) {
+            return ResponseEntity.badRequest().body("Invalid user data");
+        }
+        return ResponseEntity.ok("User created: " + user.getName() + ", age: " + user.getAge());
     }
-
 }
